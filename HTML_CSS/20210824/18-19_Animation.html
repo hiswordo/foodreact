@@ -1,0 +1,56 @@
+<!-- @link [金魚都能懂網頁設計入門 : Animation 網頁動畫 - 鐵人賽第十九天 | 網頁動畫 | 網頁教學 | CSS教學 | animation - YouTube](https://www.youtube.com/watch?v=H9xZ9mExrZk&loop=0) at 2021/8/26 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .john {
+            width: 100px;
+            height: 100px;
+            background-color: #ff0;
+            text-align: center;
+            line-height: 100px;
+            font-size: 30px;
+            /* transition: all 2s 1s; */
+            transition: color 1s, background-color 1s, border-radius 1s, border 1s;
+        }
+        .john:hover {
+            background-color: #000;
+            color:#fff;
+            border-radius: 50%;
+            border: 3px solid #0ff;
+        }
+
+        .marry {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #0ff;
+            /* animation: name duration timing-function delay iteration-count direction fill-mode; */
+        }
+        .marry:hover {
+            animation: popout 2s 0s infinite alternate;
+        }
+        @keyframes popout {
+            0% {
+                border-radius: 50%;
+                background-color: #0ff;
+            }
+            100% {
+                border-radius: 0%;
+                background-color: #fa0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="john">GO</div>
+    <div class="marry"></div>
+</body>
+
+</html>

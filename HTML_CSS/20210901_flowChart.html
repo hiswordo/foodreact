@@ -1,0 +1,32 @@
+<!-- @link [javascript - How to add a link in a mermaid node description? - Stack Overflow](https://stackoverflow.com/questions/41960529/how-to-add-a-link-in-a-mermaid-node-description#51838205) at 2021/9/1 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+    <link href="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.css" rel="stylesheet" /> 
+</head>
+<body>
+    <script>  
+        mermaid.initialize({
+            startOnLoad: true
+        });
+    </script>
+    <div class='mermaid'>
+    graph TD; 
+    A(Start)-->B(Do some stuff); 
+    B(Take some rest)-->C(do more);
+    click B "http://www.github.com" "This is a link"
+    click A callback "Hi I'm a callback, whats up"
+    </div>
+    <script>
+        var callback = function(){
+            alert('A callback was triggered');
+        }
+    <script>
+
+</body>
+</html>

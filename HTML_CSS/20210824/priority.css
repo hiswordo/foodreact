@@ -1,0 +1,19 @@
+.box-a {
+    width: 100px;
+    height: 100px;
+    border: 10px solid blue;
+    padding: 10px 20px;
+    background: red;
+    /* box-sizing: content-box; */
+}
+.box-b {
+    width: 100px;
+    height: 100px;
+    border: 10px solid blue;
+    padding: 10px 20px;
+    background: red;
+    /* box-sizing: border-box; */
+}
+*, *::before, *::after {
+    box-sizing: border-box;
+}

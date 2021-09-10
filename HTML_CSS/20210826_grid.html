@@ -1,0 +1,107 @@
+<!-- # @link [#CSS #Grid 網頁佈局完全解構 - YouTube](https://www.youtube.com/watch?v=6weNTVC1oik) at 2021/8/26 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="style.css"> -->
+    <style>
+        .doublebox{
+            display: flex;
+        }
+        #container{
+            display: grid;
+            width: 400px;
+            height: 400px;
+            background-color: #aaa;
+            grid-template-rows: 25% 25% repeat(2, 25%);
+            /* 沒定義線的話，數字為[1][2]~[5]，會有點不習慣 */
+            grid-template-columns: [X0] 100px [X1] 25% [X2] 1fr [X3] 1fr [X4];
+            /*gap的計算要小心，
+            grid 無定義(同fr) 平分，或剩餘平分，為了不超出範圍 : 
+                (400-3*10(gap))/4=92.5
+                兩格:92.5*2+10(gap)=195
+                抑或是剩兩格1fr+1fr
+                (200-3*10(gap))/2=82.5
+            grid %定義(同px)，400*25%來分配，但不管怎樣如果包含多格，中間的gap就會成為grid的長寬，
+                兩格:100*2+10=210
+                外框若要配合，需要增加同gap數量長寬
+                它不會撐開container，只會直接超出去*/
+            row-gap: 10px;
+            column-gap: 10px;
+        }
+        .red{
+            background-color:red;
+            /* 2/4表第2條到第4條，用格數來看的話剛好少1，有點像程式iter */
+            grid-row: 2/ span 2; /*span 2: 延伸兩格的意思*/
+            grid-column: 2/4;
+            /*也可以用are表示，平常座標起點(1,1)終點(3,3)但記得是(y,x)*/
+            /* grid-area: 2/2/4/4; */
+        }
+        .yellow{
+            background-color: yellow;
+            grid-row: 2 / span 2;
+            grid-column: X3 / X4;
+        }
+        .green{
+            background-color: green;
+            /*重疊時，代表div比較後面的會蓋掉前面的*/
+            grid-area: 1/1/3/3;
+        }
+        .blue{
+            background-color: blue;
+            grid-area: 4/3/5/5;
+        }
+        #containera{
+            margin: 0px 0px 0px 15px;
+            display: grid;
+            width: 400px;
+            height: 400px;
+            background-color: #aaa;
+            /*grid temp 幾乘幾由名稱排列決定*/
+            grid-template-areas: 
+            ". . . ."
+            ". redabox redabox yellowabox"
+            ". redabox redabox yellowabox"
+            ". . . .";
+            row-gap: 10px;
+            column-gap: 10px;
+        }
+        .reda{
+            background-color:rgb(255, 141, 141);
+            grid-area: redabox;
+        }
+        .yellowa{
+            background-color: rgb(255, 255, 167);
+            grid-area: yellowabox;
+        }
+        .greena{
+            background-color: rgb(166, 248, 166);
+            grid-area: 1/1/3/3;
+        }
+        .bluea{
+            background-color: rgb(165, 165, 241);
+            grid-area: 4/3/5/5;
+        }
+    </style>
+</head>
+<body>
+    <div class="doublebox">
+        <div id="container">
+            <div class="red"></div>
+            <div class="yellow"></div>
+            <div class="green"></div>
+            <div class="blue"></div>
+        </div>
+        <div id="containera">
+            <div class="reda"></div>
+            <div class="yellowa"></div>
+            <div class="greena"></div>
+            <div class="bluea"></div>
+        </div>
+    </div>    
+</body>
+</html>
