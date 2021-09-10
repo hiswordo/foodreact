@@ -1,0 +1,32 @@
+記得要用embed才可用iframe
+src: https://www.youtube.com/embed/VIDEO_ID
+embeded 的 src tags:?起頭&使用更多
+設定開始跟結束(只能秒數記): start=60&end=120
+(watch的設定則是:#t=6m37s)
+推薦相關視頻-無: rel=0
+自動播放: autoplay=1
+播放器控件-無: controls=0
+FullScreen按鈕-無: fs=0
+重複播放: &loop=1
+清單第N個: list=PLAYLIST_ID&index=N
+不全屏播放(iOS 設備上): playsinline=1
+靜音: mute=1
+
+iframe tags:
+標配: id="ytplayer" type="text/html"
+長寬: width="" height=""
+邊界-無: frameborder="0"
+可全螢幕: allowfullscreen
+allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+
+ex : Youtube時間區間設定方式
+https://www.youtube.com/embed/z6dNAdtWdJk?start=397&end=424&autoplay=0
+ex : watch模式
+https://www.youtube.com/watch?v=z6dNAdtWdJk#t=6m37s
+
+
+<div class="video-container">
+    <iframe id="ytplayer" type="text/html" src="https://www.youtube.com/embed/klZNNUz4wPQ?&rel=1" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+</div>
