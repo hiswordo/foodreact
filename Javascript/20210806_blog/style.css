@@ -1,0 +1,4 @@
+h1{text-align: center;}
+body{text-align: left;}
+body,input,textarea,button{width: -webkit-fill-available; font-family: sans-serif;}
+button{background-color: aquamarine;}

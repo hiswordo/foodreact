@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container"></div>
+    <script>
+        function appendChildDiv(options = {}) {
+            const div = document.createElement('div');
+            // 解構，設定初始值
+            const {
+                parent = 'body',
+                width = '100px',
+                height = '80px',
+                backgroundColor = 'pink',
+            } = options
+
+            // 賦值
+            div.style.width = width;
+            div.style.height = height;
+            div.style.backgroundColor = backgroundColor;
+
+            // append會加在parent div裡面的最後面
+            document.querySelector(parent).appendChild(div)
+        }
+
+        appendChildDiv({
+            parent: '.container',
+            width: '500px',
+            height: '400px',
+            backgroundColor: 'orange',
+        })
+    </script>
+</body>
+
+</html>

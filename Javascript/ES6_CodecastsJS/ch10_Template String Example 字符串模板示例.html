@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const Jelly = {
+            name: 'Jelly',
+            date: '2017-05-07',
+            todos: [
+                { name: 'Go to Store', completed: false },
+                { name: 'Watch Move', completed: true },
+                { name: 'Running', completed: true }
+            ]
+        }
+        // <li>${Jelly.todos[0].name}</li>
+        // ${Jelly.todos.map(todo => `<li>${ todo.name }</li>` ).join('')}
+        const template = `
+            <ul>
+                ${Jelly.todos.map(todo => `
+                    <li>
+                        ${todo.name} ${todo.completed ? '✅' : '❌'}
+                    </li>` ).join('')}
+            </ul>
+        `
+        //map返回數組["Go to Store", "Watch Move", "Running"]
+        console.log(Jelly.todos.map(todo => todo.name))
+        //
+        console.log(template);
+        document.body.innerHTML = template;
+    </script>
+</body>
+
+</html>

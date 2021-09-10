@@ -1,0 +1,19 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Henry's DocDoc</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1 id="header">GetElement</h1>
+        <h1 id="secondh1">Motorola</h1>
+        <a id ="link" href="https://google.com">Go to google</a>
+        <h2>以下為監聽事件</h2>
+        <!-- <button onclick="point.get()">Test Button</button> -->
+        <!-- this會向函數傳回button，在html裡面事件event前面要加個on，js裡面不用 -->
+        <button onclick="hand_ck(this)">點我!</button>  
+        <button id="btn" >踢我!</button>
+        <script type="text/javascript" src="button.js"></script>  <!-- 越後面執行，能蓋掉前面的結果 -->
+    </body>
+</html>
