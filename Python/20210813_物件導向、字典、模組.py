@@ -275,7 +275,7 @@ scores = {"駱昊": 95, "白元芳": 78, "狄仁傑": 82}
 # nf.sayhello('Rock')
 
 # ?? 上層的modeules怎麼辦
-# 02.鏈式呼叫 #! 相對於執行的py路徑，好用! 但有可能很長
+# 02.鏈式呼叫 #! 相對於執行的py路徑，好用! 但有可能很長，且上一層不知道怎麼用
 # import modules.newfunction as nf
 # nf.sayhello('Rock')
 
@@ -290,11 +290,14 @@ scores = {"駱昊": 95, "白元芳": 78, "狄仁傑": 82}
 # * as : 隨時可用的好東西
 # * sys.path 得模組路徑讀取順序，dir()得模組內屬性跟方法
 
-# rock1 = 20
-# import modules.newfunction as nf
-# print(rock1) # 這裡則是引用本篇的rock1
-# print(nf.rock1) # 因為特別引用nf的rock1，不會跟本篇的rock1衝突
+# %%
+rock1 = 20
+import modules.newfunction as nf
+print(rock1) # 這裡則是引用本篇的rock1
+print(nf.rock1) # 因為特別引用nf的rock1，不會跟本篇的rock1衝突
 
+
+# %%
 # rock1 = 20
 # from modules.newfunction import *
 # print(rock1) # 因為名稱一樣，他會引用nf的rock1，所以會覆蓋掉本篇的rock1

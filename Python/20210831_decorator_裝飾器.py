@@ -33,15 +33,18 @@ time_step2fuc()
 # or 
 timer(step2)() """
 
-# ----3 way decorator----
-""" def timer(func):
+# %%
+# ----3 way by decorator----
+import time as t
+
+def timer(func):
     # 以下就是裝飾器
     def wrapper():
         start = t.time()
         func()
         end = t.time()
         used = end - start
-        print(f"{used=}")
+        print(f"{used}")
     return wrapper
 
 # 告訴所以人要調用ste3()前得先經過timer()這一關
@@ -50,8 +53,8 @@ def step3():
     print('this is step3')
 
 step3()
- """
 
+# %%
 # ----其他範例----
 # @link [往函数上加多个装饰器怎么操作？python是如何装饰和执行它们的？ - YouTube](https://www.youtube.com/watch?v=U7Bu-Z0-TIY&loop=0) at 2021/8/31
 # 購物密碼

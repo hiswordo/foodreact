@@ -82,3 +82,4 @@ condition = data["salary"] > 40000
 print('取薪水大於4w那一列 = ', data[condition], sep='\n')
 condition = data["name"].str.contains("m")
 print('取名字包含m的', data[condition], sep='\n')
+# %%

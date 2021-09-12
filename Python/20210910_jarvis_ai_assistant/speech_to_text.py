@@ -1,5 +1,5 @@
 import speech_recognition as sr
-
+# @link [[Python]如何Speech to Text: SpeechRecognition - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10252078) at 2021/9/11
 # SpeechRecognition系統自身並沒有語音識別功能，因此我們需要為SpeechRecognition安裝一款語音識別引擎
 # pip install PyAudio-0.2.11-cp38-cp38-win_amd64.whl
 # 很爛款? pip install pocketsphinx-0.1.15-cp38-cp38-win_amd64.whl

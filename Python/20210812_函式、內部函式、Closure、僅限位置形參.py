@@ -7,6 +7,7 @@
 
 # ----函式當成資料在使用---- 
 # * ()是呼叫函式!!「不使用括號」會「將函式視為其他的物件」
+# 函數當參數?
 
 """ def run_something(func):
     func() # func傳入answer，執行answer()
