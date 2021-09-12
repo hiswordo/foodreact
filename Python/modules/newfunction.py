@@ -1,6 +1,9 @@
 
 # 尚在測試的模組
 
+def rAinB_lower(a, b):
+    return a.lower() in b.lower()
+
 def dir_remodule(listin):
     removelist = ['__builtins__', '__cached__', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__']
     for i in removelist:
