@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "Python"
+		},
+		{
+			"path": "C:\\Users\\oEdward\\AppData\\Local\\Programs\\Python\\Python38\\mymodules"
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true,
+		"liveServer.settings.multiRootWorkspaceName": "Python"
+	}
+}

@@ -119,5 +119,15 @@ def rAinB(a, b):
 print(rAinB("no","Saying Nothing"))
 
 
+# %%
+from youtubesearchpython import VideosSearch
 
+videosSearch = VideosSearch('Using Pathlib in Python', limit = 1)
+urlink = dict(videosSearch.result()['result'][0])['link']
+print(urlink)
+
+# %%
+import pandas as pd
+df = pd.read_xml(("./res/[MISM-082].nfo"))
+df
 # %%
