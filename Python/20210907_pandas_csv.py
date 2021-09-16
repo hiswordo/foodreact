@@ -83,7 +83,7 @@ df = pd.read_csv("./res/pokemon_data.csv")
 
 # 忽略index
 df.to_csv('./res/modified.csv', index=False)
-df.to_excel('./res/modified.xlsx', index=False)
+df.to_excel('./res/modified.xlsx', index=False) #! 記得檔名要換xlsx 只要是excel都可以加sheet_name=["2018", "2019"]
 df.to_csv('./res/modified.txt', index=False, sep='\t')
 
 # ---< 資路篩選 >---

@@ -71,7 +71,7 @@
 """ 
 _spam（單底線開頭）：[文件獨有] 弱「內部使用」標識。對於from M import *，將不匯入所有以底線開頭的物件。
 spam_（單底線結尾）：為了避免與python關鍵字的命名衝突。
-__spam（雙底線開頭）：[Class獨有] 在命名一個類特性的時候，採用名字修飾，比如在類SpamEggs內，__spam將變成_SpamEggs__spam[68]。 # ! 避免SpamEggs有spam，RockEggs2也有spam，兩者不override
+__spam（雙底線開頭）：[Class獨有] 在命名一個類特性的時候，採用名字修飾，比如在類SpamEggs內，__spam將變成_SpamEggs__spam[68]。 # ! 避免SpamEggs有spam，RockEggs2也有spam，兩者不override，記得也是內部使用阿?
 __spam__（雙底線開頭雙底線結尾）：[Python獨有] python獨有的「魔術」物件或特性，比如__name__、__doc__、__init__、__import__、__file__等。建議永遠不要將這樣的命名方式應用於自己的變數或函式。
 _ (單底線) : 臨時變量、或稱不關心變數。ex: for _ in range(1,6)，跑六次迴圈，但不需要給予任何變數
  """
