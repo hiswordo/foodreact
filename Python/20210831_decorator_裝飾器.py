@@ -54,6 +54,24 @@ def step3():
 
 step3()
 
+# ----Class中的裝飾器----
+class Test(object):
+    def _decorator(foo):
+        def magic( self ) :
+            print("start magic")
+            foo( self )
+            print("end magic")
+        return magic
+
+    @_decorator
+    def bar( self ) :
+        print("normal call")
+
+test = Test()
+
+test.bar()
+
+
 # %%
 # ----其他範例----
 # @link [往函数上加多个装饰器怎么操作？python是如何装饰和执行它们的？ - YouTube](https://www.youtube.com/watch?v=U7Bu-Z0-TIY&loop=0) at 2021/8/31
