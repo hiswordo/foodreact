@@ -148,3 +148,149 @@ st.write("結果：", result)
 
 # 嘗試: 隨機float-10~11
 # outcome = np.random.randint(-10,11,[10,2])*np.random.random([10,2])
+
+# ---< 放圖片 >---
+# 基本型
+st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Antalya-Alanaya_aras%C4%B1_t%C3%BCnel.jpg/800px-Antalya-Alanaya_aras%C4%B1_t%C3%BCnel.jpg")
+# st.image(image, width=64)
+
+# 基本markdown
+md = """
+![Tunnels](https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Antalya-Alanaya_aras%C4%B1_t%C3%BCnel.jpg/800px-Antalya-Alanaya_aras%C4%B1_t%C3%BCnel.jpg)
+"""
+st.markdown(md)
+
+# Href on image
+st.markdown('''
+    <a href="https://docs.streamlit.io">
+        <img src="https://media.tenor.com/images/ac3316998c5a2958f0ee8dfe577d5281/tenor.gif" />
+    </a>''',
+    unsafe_allow_html=True
+)
+
+
+# 進階markdown 本地圖片
+import base64
+LOGO_IMAGE = "xxx.png"
+
+# ---< 插入CSS >---
+st.markdown(
+    """
+    <style>
+    .container {
+        display: flex;
+    }
+    .logo-text {
+        font-weight:700 !important;
+        font-size:50px !important;
+        color: #f9a01b !important;
+        padding-top: 75px !important;
+    }
+    .logo-img {
+        float:right;
+        width: 60%;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# @link [Using Images - Streamlitopedia](https://pmbaumgartner.github.io/streamlitopedia/sizing-and-images.html) at 2021/9/15
+# @link [Cache版本 Href on image - Using Streamlit - Streamlit](https://discuss.streamlit.io/t/href-on-image/9693/3) at 2021/9/15
+st.markdown(
+    f"""
+    <div class="container">
+        <img class="logo-img" src="data:image/png;base64,{base64.b64encode(open(LOGO_IMAGE, "rb").read()).decode()}">
+        <p class="logo-text">Logo Much ?</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# 包裝成def
+def st_img(url):
+    import base64
+    return st.markdown(
+        f"""
+        <div class="container">
+            <img class="logo-img" src="data:image/png;base64,{base64.b64encode(open(url, "rb").read()).decode()}">
+            <p class="logo-text">Logo Much ?</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+st_img(filePath)
+
+# @link [GitHub - asehmi/fastapi-wrapper-apiness: CLI and Streamlit applications to create APIs from Excel data files within seconds, using FastAPI](https://github.com/asehmi/fastapi-wrapper-apiness) at 2021/9/15
+# 輪番，尚未測試
+if st.sidebar.checkbox('Readme', False):
+    st.markdown('---')
+    '''
+    ### Readme :smile:
+    '''
+    with open('./README.md', 'r', encoding='utf-8') as f:
+        readme_lines = f.readlines()
+        readme_buffer = []
+        images = [
+            'https://picsum.photos/350/200?random=1',
+            'https://picsum.photos/350/200?random=2',
+            'https://picsum.photos/350/200?random=3',
+            'https://picsum.photos/350/200?random=4',
+            'https://picsum.photos/350/200?random=5',
+            'https://picsum.photos/350/200?random=6',
+            'https://picsum.photos/350/200?random=7',
+            'https://picsum.photos/350/200?random=8',
+            'https://picsum.photos/350/200?random=9'
+            'images/apiness.png',
+            'images/fastapi_testimonial.png'
+        ]
+        for line in readme_lines:
+            readme_buffer.append(line)
+            for image in images:
+                if image in line:
+                    st.markdown(' '.join(readme_buffer[:-1]))
+                    st.image(f'https://raw.githubusercontent.com/asehmi/fastapi-wrapper-apiness/main/{image}')
+                    readme_buffer.clear()
+        st.markdown(' '.join(readme_buffer))
+
+# 測試中
+# localPath = "file:///G:/my_coding/Python/20210915_steamlit_video_bookmarks/Using%20Pathlib%20in%20Python%206-36%20screenshot.png"
+# localPath = "G:/my_coding/Python/20210915_steamlit_video_bookmarks/Using%20Pathlib%20in%20Python%206-36%20screenshot.png"
+import base64
+st.markdown(
+    f"[![{filePath}]](https://www.youtube.com/watch?v=Egj_DdGUIDI)")
+st.image(base64.b64encode(open(filePath, "rb").read()))
+
+# ---[ streamlit: 自定義樣板 ]---
+def my_widget(key):
+    st.subheader('Hello there!')
+    return st.button("Click me " + key)
+# This works in the main area
+
+clicked = my_widget("first")
+
+# And within an expander
+my_expander = st.expander("Expand", expanded=True)
+with my_expander:
+    clicked = my_widget("second")
+
+# AND in st.sidebar!
+with st.sidebar:
+    clicked = my_widget("third")
+
+# ---[ Pandas: 轉html table with href link ]---
+df = pd.DataFrame({"Yes": [30, 30], "No": ["html=7", "html=6"]}, index=["村子A", "村子B"])
+def make_clickable(link):
+    # Link另開視窗 # target="_blank"
+    # extract clickable text to display for your link
+    # text = link.split('=')[1]
+    return f'<a href="{link}">Link</a>'
+
+# link is the column with hyperlinks
+df["No"] = df["No"].apply(make_clickable)
+st.write(df.to_html(escape=False), unsafe_allow_html=True)
+
+
+
+
