@@ -61,7 +61,7 @@ print("My Partial Path looks like this before `absolute`: " + str(pathlib.Path("
 print("My Partial Path looks like this after `absolute`: " + str(pathlib.Path("data").absolute()))
 
 # %%
-# resolve() 抓取完整路徑，幫你把剩下的填完整
+# resolve() 抓取完整路徑，幫你把剩下的填完整，整理斜線
 # `resolve` will do things like remove `..` or 
 # change windows path to unix paths and vice versa.
 print(pathlib.Path('my_coding/../20210912_modules_pathlib.py').resolve())
@@ -69,13 +69,21 @@ print(pathlib.Path('my_coding/20210912_modules_pathlib.py').resolve())
 print(pathlib.Path("G:/my_coding/Python/20210912_modules_pathlib.py").resolve())
 
 # %%
-# 列出當下所有資料夾 Listing subdirectories
+# ---[ 檔案路徑: 列出當下所有資料夾 Listing subdirectories ]---
 p = pathlib.Path('.')
 [x for x in p.iterdir() if x.is_dir()]
 
 # %%
-# 列出 data_folder 底下的所有txt檔案
+# ---[ 檔案列表: 列出 data_folder 底下的所有檔案 ]---
+# 純檔名，不包含路徑
+folderIter = pathlib.Path(__file__).parents[0].joinpath("res/").iterdir()
+for ingName in folderIter:
+    print(str(ingName.parts[-1]))
+
+# 特定檔案txt，並包含路徑
+data_folder = pathlib.Path(__file__).parents[0].joinpath('data_video')
 list(data_folder.glob('**/*.txt'))
+
 
 # %%
 # q = pathlib.Path('/data_video') / 'second' / 'third'
