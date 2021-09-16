@@ -292,7 +292,7 @@ scores = {"駱昊": 95, "白元芳": 78, "狄仁傑": 82}
 
 # %%
 rock1 = 20
-import modules.newfunction as nf
+import mymodules.newfunction as nf
 print(rock1) # 這裡則是引用本篇的rock1
 print(nf.rock1) # 因為特別引用nf的rock1，不會跟本篇的rock1衝突
 
