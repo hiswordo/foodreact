@@ -262,24 +262,24 @@ if st.checkbox("顯示側邊攔"):
         condition = tagsCondition & timeSelected
         st.write(df[condition])
 
-        if df[condition].shape[0]==1:
+        # if df[condition].shape[0]==1:
         # if st.sidebar.checkbox("Click to change tags"):
-            save_keywords = st_tags_sidebar(
-                label="# Enter Keywords:",
-                text="Press enter to add more",
-                value=keywords, # df.loc[condition,'Tags']
-                suggestions=taglist,
-                maxtags=10,
-                key="savingTags",
-            )
-            st.write(df.loc[condition,'link'])
-            if st.button("Save tags"):
-                df.loc[condition,'Tags'] = ", ".join(save_keywords)
-                df.loc[condition,'Tags']
-                df.to_excel(xlsxfileName, index=False)
-                st.success("Here you go! Data is been saved!")
-            else:
-                st.write(df.loc[condition,'Tags'])
+        save_keywords = st_tags_sidebar(
+            label="# Enter Keywords:",
+            text="Press enter to add more",
+            value=keywords, # df.loc[condition,'Tags']
+            suggestions=taglist,
+            maxtags=10,
+            key="savingTags",
+        )
+        st.write(df.loc[condition,'link'])
+        if st.button("Save tags"):
+            df.loc[condition,'Tags'] = ", ".join(save_keywords)
+            df.loc[condition,'Tags']
+            df.to_excel(xlsxfileName, index=False)
+            st.success("Here you go! Data is been saved!")
+        else:
+            st.write(df.loc[condition,'Tags'])
 
         # 方法一 list，map、literal_eval  
         # tagCondition = keywords[0]
