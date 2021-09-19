@@ -4,6 +4,8 @@
 # 存成csv檔案
 # 從csv讀取->呈現成Table
 # 可選擇標題與時間點
+# TODO 時間也要變成t1,t2,t3,t4 (還要保留之後可擴充...)
+# TODO 確認影片正確值
 # ---
 
 # 將圖片檔名轉成 圖片檔名、影片名稱、標記時間、創建日期
@@ -17,6 +19,7 @@ import datetime
 # from numpy.core.defchararray import index
 from youtubesearchpython import VideosSearch
 import streamlit as st
+# from streamlit import components
 import pandas as pd
 
 import shutil
@@ -32,6 +35,29 @@ st.markdown(
         width: 100%;
     }
     </style>
+    <style>
+    html, body { height: 100%; }
+    body { overflow: hidden; margin: 0; }
+    iframe {height: 100%; width: 100%;}
+    .element-container{}
+    </style>
+
+    <style>
+    .video-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    }
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    </style>
+    
     """,
     unsafe_allow_html=True,
 )
@@ -246,6 +272,7 @@ if st.checkbox("顯示側邊攔"):
                 maxtags=10,
                 key="savingTags",
             )
+            st.write(df.loc[condition,'link'])
             if st.button("Save tags"):
                 df.loc[condition,'Tags'] = ", ".join(save_keywords)
                 df.loc[condition,'Tags']
@@ -273,7 +300,32 @@ if st.checkbox("顯示側邊攔"):
         # row["Tags"] = str(test)
         # st.write(row)
 
+# 顯示iframe，並且能夠調整開始時間，以及自適應寬度。直接用st.video則無法調整開始時間
+# @link [【Day 28】Youtube iframe 影片自動縮放大小 - CSS 解決方法 - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10252882) at 2021/9/19
+# @link [像图片一样缩放iFrame CSS宽度100％ - ITranslater](https://www.itranslater.com/qa/details/2582500352734004224) at 2021/9/19 考慮
+# ! iframe網址記得修改
+# 1.內嵌playlist:
+# https://www.youtube.com/embed?listType=playlist&list=PLJV_el3uVTsOK_ZK5L0Iv_EQoL1JefRL4
+# 2.內嵌一部影片
+# https://www.youtube.com/embed/XnyM3-xtxHs
+# st.video("https://www.youtube.com/watch?v=z6dNAdtWdJk#t=6m37s")
+# st.video("https://www.youtube.com/embed/klZNNUz4wPQ?start=397&end=424&rel=0")
+# ---[ pandas: .values - df轉回列表list值 ]---
+if df[condition].shape[0]==1:
+    emlink = df.loc[condition, 'link'].values[0].replace('watch?v=','embed/')
+    st.markdown(
+        f"""
+        <div class="video-container">
+            <iframe width="100%" height="523.5px" id="ytplayer" type="text/html" src="{emlink}" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="0">
+            </iframe>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
+# component.iframe("""
+#     https://www.youtube.com/embed/zaoiriEbncc""" , scrolling = True , height = 350)
 
 # 顯示選取圖片
 # ! FileNotFoundError: [Errno 2] No such file or directory: 'g:\\my_coding\\Python\\20210915_steamlit_video_bookmarks\\res\\Using Pathlib in Python 14-35 screenshot.png' 指的是檔案根本沒在裡面!!! 不是路徑有問題!!
@@ -374,6 +426,7 @@ row
 # 看起來numpy就是不能用多維度
 # @link [python - Pandas DataFrame stored list as string: How to convert back to list - Stack Overflow](https://stackoverflow.com/questions/23111990/pandas-dataframe-stored-list-as-string-how-to-convert-back-to-list/23112008) at 2021/9/18
 # CLR 原來利用literal_eval可以辨別str的資料耶
+""" 
 import pandas as pd
 from ast import literal_eval
 
@@ -390,7 +443,7 @@ test.append("f")
 test.remove("a")
 df["Tags"][6] = str(test)
 df
-
+ """
 # @link [pandas的SettingWithCopyWarning警告出现的原因和如何避免_haolexiao的专栏-CSDN博客](https://blog.csdn.net/haolexiao/article/details/81180571) at 2021/9/18
 # 如果使用這種方式，會無法存入資料
 # selected.loc[6,['Tags']] = str(test)
@@ -408,6 +461,7 @@ df
 # row
 # %%
 # ----withoulist 的方式----
+""" 
 import pandas as pd
 from ast import literal_eval
 
@@ -423,7 +477,8 @@ condition = df["Tags"].map(lambda tags: "a" in tags) & (df["TimeMark"] == "10:02
 # selectedtag['Tags']
 # ! 一句話就可以修改資料了，還用上面的!!! 三小
 df.loc[condition,'Tags'] = df.loc[condition,'Tags'] +', e'
-df
+df 
+"""
 # selectedtag
 
 # selectedtag.iloc[:, 6] = str(value)
