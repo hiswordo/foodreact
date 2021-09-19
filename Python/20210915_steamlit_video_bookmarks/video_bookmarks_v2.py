@@ -217,14 +217,14 @@ def scanFolder():
 # 新建讀取資料夾的pdf，讀excel轉pd，在原excel之後面
 xlsxfileName = "./20210915_steamlit_video_bookmarks/modified.xlsx"
 
-if st.button("First Scan and save"):
+if st.sidebar.button("First Scan and save"):
     newdf = scanFolder()
     newdf
     newdf.to_excel(xlsxfileName, index=False)  # 前面乾淨
     st.success("Here you go!")
 
 # 本來功能: 同時合併與創建
-if st.button("Scan, merge and save"):
+if st.sidebar.button("Scan, merge and save"):
     newdf = scanFolder()
     originaldf = pd.read_excel(xlsxfileName)  # !沒有檔案的話，也沒辦法讀取，會出問題的
     mergedf = originaldf.append(newdf)
@@ -234,7 +234,7 @@ if st.button("Scan, merge and save"):
     mergedf.to_excel(xlsxfileName, index=False)
     st.success("Here you go!")
 
-if st.checkbox("讀取excel資料庫", True):
+if st.sidebar.checkbox("讀取excel資料庫", True):
     # # 讀取，記得用read_excel
     df = pd.read_excel(xlsxfileName)  # , index=False)  # encoding="utf-8"
 
@@ -306,7 +306,7 @@ if st.checkbox("顯示側邊攔", True):
 
         st.subheader("Tags搜索結果")
         # ! drop=True會幫忙刪掉原本index
-        st.write(df[condition].iloc[:,[0,2]].reset_index(drop=True))
+        st.write(df[condition].iloc[:, [0, 2]].reset_index(drop=True))
 
 # TODO: 圖片連結CSS，4x8排列?
 # 標籤搜索後，顯示圖片連結
@@ -342,14 +342,17 @@ def showimg(j):
         imgShowlink.append(imgurl)
         imgTimelink.append(imgurlWithTime)
 
-    return st_imglink(imgShowlink[j],imgTimelink[j])
+    return st_imglink(imgShowlink[j], imgTimelink[j])
 
 
-if st.checkbox("顯示圖片連結", key="second"):
-    j = st.slider("number", min_value=0, max_value=(df.loc[condition].shape[0] - 1))
+if st.sidebar.checkbox("顯示圖片連結", key="second"):
+    if df.loc[condition].shape[0] == 1:
+        j = 0
+    else:
+        j = st.slider("number", min_value=0, max_value=(df.loc[condition].shape[0] - 1))
     st.subheader(df.loc[condition, "TimeMark"].values[j])
     showimg(j)
-    
+
 
 # 顯示iframe，並且能夠調整開始時間，以及自適應寬度。直接用st.video則無法調整開始時間
 # ! iframe網址記得修改embed
