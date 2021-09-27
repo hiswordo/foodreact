@@ -4,6 +4,7 @@ import os
 # from pathlib import Path
 
 import datetime
+from numpy.core.defchararray import upper
 
 # from numpy.core.defchararray import index
 from youtubesearchpython import VideosSearch
@@ -85,8 +86,14 @@ def setData(imgName):
 def searchYT(videoName):
     # 上網並搜索 影片名稱網址、影片頻道名稱、合併 網址與標記時間
     videosSearch = VideosSearch(videoName, limit=1)
-    urlink = dict(videosSearch.result()["result"][0])["link"]
-    return urlink
+    ytData = dict(videosSearch.result()["result"][0])
+    ytlink = ytData["link"]
+    ytDuration = ytData["duration"]
+    ytId = ytData["id"]
+    ytTitle = ytData["title"]
+    ytChannel = ytData["channel"]["name"]
+    print("Search Once")
+    return ytlink, ytDuration, ytId, ytTitle, ytChannel
 
 
 def moveimg(filePath, adjustfilePath):
@@ -161,29 +168,35 @@ def scanFolder():
         if videoName == prevVideoName:
             pass  # the same，跳過搜尋YT連結部分
         else:
-            urlink = searchYT(videoName)
+            ytlink, ytDuration, ytId, ytTitle, ytChannel = searchYT(videoName)
+            # urlink = "https://www.youtube.com/watch?v="
 
         # 1.3 合併成youtube link with 時間標記
-        urlinkWithTime = urlink + "#t=" + timeMM + "m" + timeSS + "s"
+        ytlinkWithTime = ytlink + "#t=" + timeMM + "m" + timeSS + "s"
 
         import random
-
-        tags = ", ".join(random.choices(["a", "b", "c", "d"], k=2))  # 測試用
+        tags = ", ".join(random.sample(["a", "b", "c", "d"], k=2))  # 測試用
         # tags = ""
         description = ""
-        linkchecked = False  # 影片連結確認正確
+        if ytTitle==videoName:
+            linkchecked = True  # 影片連結確認正確
+        else:
+            linkchecked = False
 
         # 1.5 存入img item list中，並合併到itemslist上
         itemOutput = [
             videoName,
             timeMark,
             created_date,
-            urlinkWithTime,  # 之後轉alink
-            urlink,  # 存沒有加過時間的link # 乾淨link
+            ytlinkWithTime,  # 之後轉alink
+            ytlink,  # 存沒有加過時間的link # 乾淨link
             adjustfilePath,
             tags,
             description,
             linkchecked,
+            ytDuration,
+            ytId,
+            ytChannel,
         ]
         itemslist.append(itemOutput)
 
@@ -202,8 +215,11 @@ def scanFolder():
             "Link",
             "FilePath",
             "Tags",
-            "Descri",
+            "Descri", # TODO 給輸入空格與搜尋欄位
             "LinkCK",
+            "Duration",
+            "ID", # TODO 修改網址配上ID會比較好吧?
+            "Channel",
         ],
     )
 
@@ -238,16 +254,24 @@ if st.sidebar.checkbox("讀取excel資料庫", True):
     # # 讀取，記得用read_excel
     df = pd.read_excel(xlsxfileName)  # , index=False)  # encoding="utf-8"
 
+# 顯示excel所有資料，測試用
+st.dataframe(df)
+
+# TODO 改寫成儲存版? Tags推薦表，可以先給個基本屬性
+# ---[ 不重複詞語list ]--- 
+import nltk
+preTaglist = ", ".join(list(df["Tags"]))
+nltk_tokens = nltk.word_tokenize(preTaglist)
+no_order = list(set(nltk_tokens))
+no_order.remove(',')
+taglist = no_order
+
 # ---< 3 建立streamlit >---
 #! with sidebar的內容會自動讀，也就是說如果初始檔案沒有的話，就會報錯
 if st.checkbox("顯示側邊攔", True):
     with st.sidebar:
-        # nameChoices = tuple(df["Name"].drop_duplicates())  # 將name整理成唯一命名
-        # searchName = st.selectbox("Select a name", nameChoices)
-        # # 篩選名稱
-        # nameCondition = df["Name"] == searchName
-        # selectedList = df.loc[nameCondition]  # .reset_index()重設index會多出一行
-
+        keylabel = st.write("# Tags搜索:")
+        keywords = st.multiselect(f"{keylabel}",taglist)  #?? 空行怎麼辦阿
         # # 設立時間選擇上限
         # searchTimeMark = st.number_input(
         #     "give a number",
@@ -261,28 +285,34 @@ if st.checkbox("顯示側邊攔", True):
         # showTable = selectedList.iloc[:, [1, 3]].to_html(escape=False)
         # st.write(showTable, unsafe_allow_html=True)
 
-        keywords = st_tags_sidebar(
-            label="# Tags搜索:",
-            text="Press enter to add more",
-            value=["a", "b"],
-            suggestions=taglist,
-            maxtags=10,
-            key="searchTags",
-        )
+        # TODO 目前先用搜索的，之後要用儲存的
 
+        # !果然不需要這個額外modules耶...都有提示功能阿
+        # keywords = st_tags_sidebar(
+        #     label="# Tags搜索:",
+        #     text="Press enter to add more",
+        #     value=[],
+        #     suggestions=taglist,
+        #     maxtags=10,
+        #     key="searchTags",
+        # )
+
+        # !多重tags包含在tags欄位內
         tagsCondition = df["Tags"].map(
             lambda tags: all(tag in tags for tag in keywords)
         )
 
-        # searchitemMark = st.sidebar.number_input(
-        #     "give a number",
-        #     min_value=0,
-        #     max_value=df["Tags"].shape[0] - 1,
-        #     step=1,
-        # )
+        df[tagsCondition]
 
-        timeSelected = True  # (df["TimeMark"] == "10:02")
-        condition = tagsCondition & timeSelected
+        # 標題選擇
+        nameChoices = tuple(df[tagsCondition]["Name"].drop_duplicates())  # 將name整理成唯一命名
+        searchName = st.selectbox("Select a name", nameChoices)
+        # 篩選名稱
+        nameCondition = df["Name"] == searchName
+
+        # TODO 時間搜索似乎沒需要了
+        # timeSelected = True  # (df["TimeMark"] == "10:02")
+        condition = tagsCondition & nameCondition # & timeSelected
 
         # if df[condition].shape[0]==1:
         # if st.sidebar.checkbox("Click to change tags"):
@@ -306,7 +336,7 @@ if st.checkbox("顯示側邊攔", True):
 
         st.subheader("Tags搜索結果")
         # ! drop=True會幫忙刪掉原本index
-        st.write(df[condition].iloc[:, [0, 2]].reset_index(drop=True))
+        st.write(df[condition].iloc[:, [0, 6, 9]].reset_index(drop=True))
 
 # TODO: 圖片連結CSS，4x8排列?
 # 標籤搜索後，顯示圖片連結
@@ -324,8 +354,6 @@ if st.checkbox("顯示側邊攔", True):
 #         )
 #         st_imglink(imgurl, imgurlWithTime)
 
-# TODO 新功能，顯示一張照片連結就好
-# @st.cache
 def showimg(j):
     imgShowlink = []
     imgTimelink = []
@@ -344,31 +372,149 @@ def showimg(j):
 
     return st_imglink(imgShowlink[j], imgTimelink[j])
 
-
-if st.sidebar.checkbox("顯示圖片連結", key="second"):
-    if df.loc[condition].shape[0] == 1:
-        j = 0
-    else:
-        j = st.slider("number", min_value=0, max_value=(df.loc[condition].shape[0] - 1))
-    st.subheader(df.loc[condition, "TimeMark"].values[j])
-    showimg(j)
-
-
-# 顯示iframe，並且能夠調整開始時間，以及自適應寬度。直接用st.video則無法調整開始時間
-# ! iframe網址記得修改embed
-# TODO: 有廣告!
-if df[condition].shape[0] == 1:
-    emlink = df.loc[condition, "Link"].values[0].replace("watch?v=", "embed/")
-    secs = getSeconds(df.loc[condition, "TimeMark"].values[0])
-    finalEmlink = emlink + "?start=" + secs + "&rel=0"
-    st.subheader(df.loc[condition, "TimeMark"].values[0])
-    st.markdown(
+def showVideo(j):
+    # videoShowlink = []
+    videoTimelink = []
+    for i in range(df.loc[condition].shape[0]):
+        # 圖片路徑
+        emlink = df.loc[condition, "Link"].values[i].replace("watch?v=", "embed/")
+        # 時間小時分鐘轉秒數總和secs
+        secs = getSeconds(df.loc[condition, "TimeMark"].values[i])
+        finalEmlink = emlink + "?start=" + secs + "&rel=0"
+        # videoShowlink.append(emlink)
+        videoTimelink.append(finalEmlink)
+    
+    mark1 = st.markdown(
         f"""
         <div class="video-container">
-            <iframe width="100%" height="523.5px" id="ytplayer" type="text/html" src="{finalEmlink}" frameborder="0"
+            <iframe width="100%" height="523.5px" id="ytplayer" type="text/html" src="{videoTimelink[j]}" frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="0">
             </iframe>
         </div>
         """,
         unsafe_allow_html=True,
     )
+
+    return mark1
+
+# TODO 新功能，顯示一張照片連結就好
+# XXX @st.cache
+# 顯示iframe，並且能夠調整開始時間，以及自適應寬度。直接用st.video則無法調整開始時間
+# ! iframe網址記得修改embed
+# TODO: 有廣告!
+if st.sidebar.checkbox("顯示圖片連結&影片embeded", key="second"):
+    if df.loc[condition].shape[0] == 1:
+        j = 0
+    else:
+        j = st.slider("number", min_value=0, max_value=(df.loc[condition].shape[0] - 1))
+    st.subheader(df.loc[condition, "TimeMark"].values[j])
+    showimg(j)
+    showVideo(j)
+
+# if df[condition].shape[0] == 1:
+    # st.subheader(df.loc[condition, "TimeMark"].values[j])
+    # emlink = df.loc[condition, "Link"].values[0].replace("watch?v=", "embed/")
+    # # 時間小時分鐘轉秒數總和secs
+    # secs = getSeconds(df.loc[condition, "TimeMark"].values[0])
+    # finalEmlink = emlink + "?start=" + secs + "&rel=0"
+    # st.subheader(df.loc[condition, "TimeMark"].values[0])
+    # st.markdown(
+    #     f"""
+    #     <div class="video-container">
+    #         <iframe width="100%" height="523.5px" id="ytplayer" type="text/html" src="{finalEmlink}" frameborder="0"
+    #         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="0">
+    #         </iframe>
+    #     </div>
+    #     """,
+    #     unsafe_allow_html=True,
+    # )
+
+
+
+
+
+# from datetime import time
+# durationTime = st.slider(
+#     "Schedule your appointment:",
+#     value=time(3,5),
+#     max_value=time(11, 30),
+#     )
+# st.write("You're scheduled for:", durationTime) # ??顯示有問題
+
+# time_1 = datetime.datetime.strptime('05:00:00',"%H:%M:%S")
+# time_2 = datetime.datetime.strptime('7:00:00',"%H:%M:%S")
+# ftime1 = float(time_1)
+# st.write(ftime1)
+
+# @link [API reference — Streamlit 0.89.0 documentation](https://docs.streamlit.io/en/stable/api.html?highlight=widgets#streamlit.slider) Basic at 2021/9/26
+
+# @link [Animate st.slider - Using Streamlit - Streamlit](https://discuss.streamlit.io/t/animate-st-slider/1441/7) at 2021/9/26
+# # animate
+# import streamlit as st
+# import time
+
+# slider_ph = st.empty()
+# info_ph = st.empty()
+
+# value = slider_ph.slider("slider", 0, 100, 25, 1)
+# info_ph.info(value)
+
+# if st.button('animate'):
+#     for x in range(20):
+#         time.sleep(.5)
+
+#         value = slider_ph.slider("slider", 0, 100, value + 1, 1)
+#         info_ph.info(value)
+
+# @link [Streamlit Shorts: Core Functionality Series - Official Announcements - Streamlit](https://discuss.streamlit.io/t/streamlit-shorts-core-functionality-series/8248/6) 各種例子 at 2021/9/26
+# datetime.datetime.strptime
+# timeObj = datetime.datetime.strptime("00:05:55","%H:%M:%S")  # 轉時間物件
+# created_date = timeObj.strftime("%H:%M:%S")  # 2021-09-12
+# st.write(created_date)
+
+# st.subheader("Using a python range:")
+# my_range = range(1,21)
+# number = st.select_slider("Choose a number", options=my_range, value=10)
+# st.write('You chose %s hearts:' %number, number*":heart:")
+
+# values = st.slider(
+#     'Select a range of values',
+#     0.0, 100.0, (25.0, 75.0))
+# st.write('Values:', values)
+
+# from datetime import datetime
+# start_time = st.slider(
+#     "When do you start?",
+#     value=datetime(2020, 1, 1, 9, 30),
+#     format="MM/DD/YY - hh:mm")
+# st.write("Start time:", start_time)
+
+# from datetime import time
+# appointment = st.slider(
+#     "Schedule your appointment:",
+#     value=(time(11, 30), time(12, 45)))
+# st.write("You're scheduled for:", appointment)
+
+# start_color, end_color = st.select_slider(
+#     'Select a range of color wavelength',
+#     options=['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'],
+#     value=('red', 'blue'))
+# st.write('You selected wavelengths between', start_color, 'and', end_color)
+
+
+# %%
+# ---[ 不重複list(letter版) ]---
+import pandas as pd
+words1 = "a, b"
+words2 = "b, c"
+# words = pd.DataFrame({"Yes": words1, "No": words2}, index=[1])
+words = pd.DataFrame([["Yes", words1], ["No", words2]], columns=["Name", "Tags"])
+Taglistss = ", ".join(list(words["Tags"]))
+newlist = list(set(Taglistss))
+# *另外一種方法: list(dict.fromkeys(preTaglist))
+newlist.remove(',')
+newlist.remove(' ')
+newlist
+# newlist = [w for w in Taglistss]
+# Taglistss
+# %%
