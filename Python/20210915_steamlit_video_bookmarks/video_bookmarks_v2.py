@@ -54,10 +54,15 @@ inFolder = "scan/"
 outFolder = "res/"
 inFolderPath = pathlib.Path(__file__).parents[0].joinpath(inFolder)
 outFolderPath = pathlib.Path(__file__).parents[0].joinpath(outFolder)
+# TODO 設定在scanfolder裡面會更好一點，不然用重新整理才創建怪怪的
+subfolders = os.listdir("./20210915_steamlit_video_bookmarks/scan")
+for k in range(len(subfolders)):
+    if not os.path.exists(outFolderPath.joinpath(subfolders[k])):
+        os.mkdir(outFolderPath.joinpath(subfolders[k]))
 taglist = []
 
 
-def setData(imgName):
+def setData(imgName, subfolderName):
     # TODO : 這裡僅以youtube截圖形式判別
     # 影片名稱: 圖片名以" "空格區分出name + time + 副檔名
     videoName = " ".join(imgName.split(" ")[0:-2])
@@ -72,15 +77,12 @@ def setData(imgName):
     timeSS = _timeMark.split("-")[1].zfill(2)  # 時間補零
 
     # 創建日期
-    _created_time = os.path.getmtime(inFolderPath.joinpath(imgName))
+    _created_time = os.path.getmtime(inFolderPath.joinpath(subfolderName).joinpath(imgName))
     _created_timeObj = datetime.datetime.fromtimestamp(_created_time)  # 轉時間物件
     created_date = _created_timeObj.strftime("%Y-%m-%d")  # 2021-09-12
     # created_time = _created_timeObj.strftime("%H%M%S")  # 214303
 
-    # 轉移後的資料夾路徑+圖檔名
-    adjustfilePath = str(outFolderPath.joinpath(imgName))
-
-    return videoName, timeHH, timeMM, timeSS, created_date, adjustfilePath
+    return videoName, timeHH, timeMM, timeSS, created_date
 
 
 def searchYT(videoName):
@@ -138,71 +140,81 @@ def getSeconds(str_time):
 # 圖片資料分析
 # ---< 1 分析資料夾 >---
 def scanFolder():
-    # 初始資料 - img item資料清單
-    folderIter = inFolderPath.iterdir()
     itemslist = []  # finalOutput
+    
+    def onefolderScan(folerIterlist, subfolderName):
+        for i, imgPath in folerIterlist:
+            # 初始資料 - 圖片名、路徑合併、圖片item空list
+            imgName = imgPath.parts[-1]
+            # filePath = str(inFolderPath.joinpath(imgName))  # 原有資料夾+檔案名稱
+            filePath = str(imgPath)  # 原有資料夾+檔案名稱
+            itemOutput = []
 
+            # 1.3 # 將圖片檔名解包成 : 影片名稱、標記時間*3、紀錄日期、圖片路徑(新)、
+            # TODO 圖片路徑是絕對路徑，需要修改
+            videoName, timeHH, timeMM, timeSS, created_date = setData(imgName, subfolderName)
+
+                # 轉移後的資料夾路徑+圖檔名
+            adjustfilePath = str(outFolderPath.joinpath(subfolderName).joinpath(imgName))
+            # 1.3 合併成完整標記時間
+            timeMark = timeHH + ":" + timeMM + ":" + timeSS
+
+            # 1.4 確認影片名稱跟上一輪是否相同，[i-1]最開始會變成-1
+            if i == 0:
+                prevVideoName = "None"  # 第一次沒有比較的，直接命前一次為None
+            else:
+                prevVideoName = " ".join(folerIterlist[i - 1][1].parts[-1].split(" ")[0:-2])
+            if videoName == prevVideoName:
+                pass  # the same，跳過搜尋YT連結部分
+            else:
+                ytlink, ytDuration, ytId, ytTitle, ytChannel = searchYT(videoName)
+                # urlink = "https://www.youtube.com/watch?v="
+
+            # 1.3 合併成youtube link with 時間標記
+            ytlinkWithTime = ytlink + "#t=" + timeMM + "m" + timeSS + "s"
+
+            # import random
+            # tags = ", ".join(random.sample(["a", "b", "c", "d"], k=2))  # 測試用
+            tags = subfolderName
+            description = ""
+            if ytTitle==videoName:
+                linkchecked = True  # 影片連結確認正確
+            else:
+                linkchecked = False
+
+            # 1.5 存入img item list中，並合併到itemslist上
+            itemOutput = [
+                videoName,
+                timeMark,
+                created_date,
+                ytlinkWithTime,  # 之後轉alink
+                ytlink,  # 存沒有加過時間的link # 乾淨link
+                adjustfilePath,
+                tags,
+                description,
+                linkchecked,
+                ytDuration,
+                ytId,
+                ytChannel,
+            ]
+            itemslist.append(itemOutput)
+
+            # 1.6 移動img到res新資料夾
+            moveimg(filePath, adjustfilePath)
+            print("one file done")
+
+    # 初始資料 - img item資料清單
     # 1.1 路徑+圖片逐次讀入
     # 1.2 避免與上循環名字相同: ，使用enumerate轉成list同時傳入
-    folerIterlist = list(enumerate(folderIter))
-    for i, imgPath in folerIterlist:
-        # 初始資料 - 圖片名、路徑合併、圖片item空list
-        imgName = imgPath.parts[-1]
-        filePath = str(inFolderPath.joinpath(imgName))  # 原有資料夾+檔案名稱
-        itemOutput = []
 
-        # 1.3 # 將圖片檔名解包成 : 影片名稱、標記時間*3、紀錄日期、圖片路徑(新)、
-        # TODO 圖片路徑是絕對路徑，需要修改
-        videoName, timeHH, timeMM, timeSS, created_date, adjustfilePath = setData(
-            imgName
-        )
+    # folderIter = inFolderPath.iterdir()
+    # folerIterlist = list(enumerate(folderIter))
 
-        # 1.3 合併成完整標記時間
-        timeMark = timeHH + ":" + timeMM + ":" + timeSS
-
-        # 1.4 確認影片名稱跟上一輪是否相同，[i-1]最開始會變成-1
-        if i == 0:
-            prevVideoName = "None"  # 第一次沒有比較的，直接命前一次為None
-        else:
-            prevVideoName = " ".join(folerIterlist[i - 1][1].parts[-1].split(" ")[0:-2])
-        if videoName == prevVideoName:
-            pass  # the same，跳過搜尋YT連結部分
-        else:
-            ytlink, ytDuration, ytId, ytTitle, ytChannel = searchYT(videoName)
-            # urlink = "https://www.youtube.com/watch?v="
-
-        # 1.3 合併成youtube link with 時間標記
-        ytlinkWithTime = ytlink + "#t=" + timeMM + "m" + timeSS + "s"
-
-        import random
-        tags = ", ".join(random.sample(["a", "b", "c", "d"], k=2))  # 測試用
-        # tags = ""
-        description = ""
-        if ytTitle==videoName:
-            linkchecked = True  # 影片連結確認正確
-        else:
-            linkchecked = False
-
-        # 1.5 存入img item list中，並合併到itemslist上
-        itemOutput = [
-            videoName,
-            timeMark,
-            created_date,
-            ytlinkWithTime,  # 之後轉alink
-            ytlink,  # 存沒有加過時間的link # 乾淨link
-            adjustfilePath,
-            tags,
-            description,
-            linkchecked,
-            ytDuration,
-            ytId,
-            ytChannel,
-        ]
-        itemslist.append(itemOutput)
-
-        # 1.6 移動img到res新資料夾
-        moveimg(filePath, adjustfilePath)
-        print("one file done")
+    for i in range(len(subfolders)):
+        # subfoldersPath = "./scan/" + subfolders[i]
+        folderIter = inFolderPath.joinpath(subfolders[i]).iterdir()
+        folerIterlist = list(enumerate(folderIter))
+        onefolderScan(folerIterlist, subfolders[i])
 
     # 將list轉成panda形式
     pandaDF = pd.DataFrame(
