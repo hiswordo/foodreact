@@ -19,7 +19,17 @@
     },
     // "options_page": "options.html",
     "permissions": [                     // 這個插件需要的權限，api需要"storage"
-    "tabs","storage","activeTab","scripting"                            // 操作分頁的權限
-    ]
+    "storage","activeTab","scripting"                            // 操作分頁的權限 //"tabs",
+    ],
+    "options_page": "options.html"
 }
     
+
+
+// "content_scripts" : [
+//     {
+//     "matches" : [ "https://www.foodpanda.com.tw/*" ],
+//     "run_at": "document_end",
+//     "js" : [ "jquery.min.js", "js/ticket.js" ]
+//     }
+// ]
