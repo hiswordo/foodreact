@@ -1,6 +1,6 @@
 
 # ----python100_ch16----
-# ----enumerate
+# ---[ 枚舉 同時返回 (迴圈次數,迴圈內容) enumerate() ]
 seasons = ['Spring', 'Summer', 'Fall', 'Winter']
 list(enumerate(seasons))
 [(0, 'Spring'), (1, 'Summer'), (2, 'Fall'), (3, 'Winter')]

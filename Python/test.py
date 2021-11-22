@@ -131,3 +131,69 @@ import pandas as pd
 df = pd.read_xml(("./res/[MISM-082].nfo"))
 df
 # %%
+from youtubesearchpython import VideosSearch
+def searchYT(videoName):
+    # 上網並搜索 影片名稱網址、影片頻道名稱、合併 網址與標記時間
+    videosSearch = VideosSearch(videoName, limit=1)
+    urlili = dict(videosSearch.result()["result"][0])
+    print(f'{urlili["link"]}')
+    print(f'{urlili["id"]}')
+    print(f'{urlili["title"]}')
+    print(f'{urlili["publishedTime"]}')
+    print(f'{urlili["duration"]}')
+    print(f'{urlili["viewCount"]["text"]}')
+    print(f'{urlili["thumbnails"][0]["url"]}')
+    print(f'{urlili["descriptionSnippet"][0]["text"]}')
+    print(f'{urlili["channel"]["name"]}')
+    print(f'{urlili["channel"]["id"]}')
+    print(f'{urlili["channel"]["thumbnails"][0]["url"]}')
+    print(f'{urlili["channel"]["link"]}')
+
+
+searchYT("Intermediate Python Programming Course")
+# %%
+{
+    "result": [
+        {
+            "type": "video",
+            "id": "K4DyBUG242c",
+            "title": "Cartoon - On & On (feat. Daniel Levi) [NCS Release]",
+            "publishedTime": "5 years ago",
+            "duration": "3:28",
+            "viewCount": {
+                "text": "389,673,774 views",
+                "short": "389M views"
+            },
+            "thumbnails": [
+                {
+                    "url": "https://i.ytimg.com/vi/K4DyBUG242c/hqdefault.jpg?sqp=-oaymwEjCOADEI4CSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBkTusCwcZQlmVAaRQ5rH-mvBuA1g",
+                    "width": 480,
+                    "height": 270
+                }
+            ],
+            "descriptionSnippet": [
+                {
+                    "text": "NCS: Music Without Limitations NCS Spotify: http://spoti.fi/NCS Free Download / Stream: http://ncs.io/onandon \u25bd Connect with\u00a0..."
+                }
+            ],
+            "channel": {
+                "name": "NoCopyrightSounds",
+                "id": "UC_aEa8K-EOJ3D6gOs7HcyNg",
+                "thumbnails": [
+                    {
+                        "url": "https://yt3.ggpht.com/a-/AOh14GhS0G5FwV8rMhVCUWSDp36vWEvnNs5Vl97Zww=s68-c-k-c0x00ffffff-no-rj-mo",
+                        "width": 68,
+                        "height": 68
+                    }
+                ],
+                "link": "https://www.youtube.com/channel/UC_aEa8K-EOJ3D6gOs7HcyNg"
+            },
+            "accessibility": {
+                "title": "Cartoon - On & On (feat. Daniel Levi) [NCS Release] by NoCopyrightSounds 5 years ago 3 minutes, 28 seconds 389,673,774 views",
+                "duration": "3 minutes, 28 seconds"
+            },
+            "link": "https://www.youtube.com/watch?v=K4DyBUG242c",
+            "shelfTitle": null
+        },
+    ]
+}
