@@ -12,6 +12,6 @@
 	],
 	"settings": {
 		"git.ignoreLimitWarning": true,
-		"liveServer.settings.multiRootWorkspaceName": "Python"
+		"liveServer.settings.multiRootWorkspaceName": "my_coding"
 	}
 }
