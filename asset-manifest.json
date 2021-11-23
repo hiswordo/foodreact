@@ -1,22 +1,20 @@
 {
   "files": {
-    "main.css": "/foodreact/static/css/main.8c8b27cf.chunk.css",
-    "main.js": "/foodreact/static/js/main.ca9f7c9b.chunk.js",
-    "main.js.map": "/foodreact/static/js/main.ca9f7c9b.chunk.js.map",
-    "runtime-main.js": "/foodreact/static/js/runtime-main.977911db.js",
-    "runtime-main.js.map": "/foodreact/static/js/runtime-main.977911db.js.map",
-    "static/js/2.f8358850.chunk.js": "/foodreact/static/js/2.f8358850.chunk.js",
-    "static/js/2.f8358850.chunk.js.map": "/foodreact/static/js/2.f8358850.chunk.js.map",
-    "static/js/3.d375042d.chunk.js": "/foodreact/static/js/3.d375042d.chunk.js",
-    "static/js/3.d375042d.chunk.js.map": "/foodreact/static/js/3.d375042d.chunk.js.map",
+    "main.css": "/foodreact/static/css/main.e7e1bc42.chunk.css",
+    "main.js": "/foodreact/static/js/main.f3669ac7.chunk.js",
+    "main.js.map": "/foodreact/static/js/main.f3669ac7.chunk.js.map",
+    "runtime-main.js": "/foodreact/static/js/runtime-main.0e3bdf41.js",
+    "runtime-main.js.map": "/foodreact/static/js/runtime-main.0e3bdf41.js.map",
+    "static/js/2.5c651ff8.chunk.js": "/foodreact/static/js/2.5c651ff8.chunk.js",
+    "static/js/2.5c651ff8.chunk.js.map": "/foodreact/static/js/2.5c651ff8.chunk.js.map",
     "index.html": "/foodreact/index.html",
-    "static/css/main.8c8b27cf.chunk.css.map": "/foodreact/static/css/main.8c8b27cf.chunk.css.map",
-    "static/js/2.f8358850.chunk.js.LICENSE.txt": "/foodreact/static/js/2.f8358850.chunk.js.LICENSE.txt"
+    "static/css/main.e7e1bc42.chunk.css.map": "/foodreact/static/css/main.e7e1bc42.chunk.css.map",
+    "static/js/2.5c651ff8.chunk.js.LICENSE.txt": "/foodreact/static/js/2.5c651ff8.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.977911db.js",
-    "static/js/2.f8358850.chunk.js",
-    "static/css/main.8c8b27cf.chunk.css",
-    "static/js/main.ca9f7c9b.chunk.js"
+    "static/js/runtime-main.0e3bdf41.js",
+    "static/js/2.5c651ff8.chunk.js",
+    "static/css/main.e7e1bc42.chunk.css",
+    "static/js/main.f3669ac7.chunk.js"
   ]
 }
