@@ -1,0 +1,21 @@
+{
+  "cards": [{
+      "title": "store 1",
+      "body": "./res/beefhotpot.jpg",
+      "stars": "★★★★★",
+      "id": 1
+    },
+    {
+      "title": "store 2",
+      "body": "./res/meatsoup.jpg",
+      "stars": "★★★☆☆",
+      "id": 2
+    },
+    {
+      "title": "store 3",
+      "body": "./res/noodle.jpg",
+      "stars": "★★★★☆",
+      "id": 3
+    }
+  ]
+}
