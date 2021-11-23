@@ -17,7 +17,8 @@ function App() {
         <Navbar />
         <div className="content">
           <Switch>
-            <Route exact path="/">
+            {/* 當首頁是/foodreat/的話，用exact "/"那就會對應不到了 */}
+            <Route exact path="/foodreat/">
               <Home />
             </Route>
             {/* <Route path="/create">
